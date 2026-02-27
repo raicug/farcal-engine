@@ -223,4 +223,17 @@ if(WIN32 AND NOT FARCAL_SINGLE_EXE)
     if(NOT EXISTS "${FARCAL_DLL_BIN_DEBUG}")
         set(FARCAL_DLL_BIN_DEBUG "${FARCAL_DLL_BIN_RELEASE}")
     endif()
+
+    if(EXISTS "${FARCAL_QT_PLUGINS_RELEASE}/platforms")
+        add_custom_command(TARGET FarcalEngineV2 POST_BUILD
+            COMMAND "${CMAKE_COMMAND}" -E make_directory "$<TARGET_FILE_DIR:FarcalEngineV2>/platforms"
+            COMMAND "${CMAKE_COMMAND}" -E copy_directory
+                "$<IF:$<CONFIG:Debug>,${FARCAL_QT_PLUGINS_DEBUG}/platforms,${FARCAL_QT_PLUGINS_RELEASE}/platforms>"
+                "$<TARGET_FILE_DIR:FarcalEngineV2>/platforms"
+            COMMENT "Copying Qt platform plugins for FarcalEngineV2"
+            VERBATIM
+        )
+    else()
+        message(WARNING "Qt platform plugin directory was not found; application may fail to start.")
+    endif()
 endif()
