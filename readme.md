@@ -1,6 +1,6 @@
-# Farcal Engine V2
+# Farcal Engine
 
-Farcal Engine V2 is a C++20 desktop memory analysis tool with a Qt6 UI and Lua scripting support.
+Farcal Engine is a C++20 desktop memory analysis tool with a Qt6 UI and Lua scripting support.
 It is designed for attaching to a running process, scanning memory, inspecting values, and applying value writes in real time.
 
 ## Features
