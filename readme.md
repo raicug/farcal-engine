@@ -3,6 +3,9 @@
 Farcal Engine is a C++20 desktop memory analysis tool with a Qt6 UI and Lua scripting support.
 It is designed for attaching to a running process, scanning memory, inspecting values, and applying value writes in real time.
 
+![Showcase](showcase.png)
+
+
 ## Features
 
 - Process attach flow (including attach last process)
@@ -86,5 +89,3 @@ After building, launch one of:
 
 - The tool interacts with external process memory. Run with appropriate permissions.
 - Use only on software and systems you are authorized to inspect.
-
-![Showcase](showcase.png)
