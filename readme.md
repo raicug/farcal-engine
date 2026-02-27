@@ -69,8 +69,6 @@ After building, launch one of:
 - `build/Debug/FarcalEngineV2.exe`
 - `build/Release/FarcalEngineV2.exe`
 
-A post-build step also mirrors runtime files into `bin/`.
-
 ## Main Build Options
 
 - `FARCAL_SINGLE_EXE`: Build as a single executable (requires static Qt)
@@ -82,11 +80,11 @@ A post-build step also mirrors runtime files into `bin/`.
 
 - `src/`: application, UI, memory scanner, and Lua VM source files
 - `include/`: public headers
-- `cmake/`: helper CMake scripts
 - `build/`: generated build files/artifacts
-- `bin/`: copied runtime output and DLLs
 
 ## Notes
 
 - The tool interacts with external process memory. Run with appropriate permissions.
 - Use only on software and systems you are authorized to inspect.
+
+![Showcase](showcase.png)
