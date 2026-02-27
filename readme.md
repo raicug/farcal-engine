@@ -82,7 +82,6 @@ A post-build step also mirrors runtime files into `bin/`.
 
 - `src/`: application, UI, memory scanner, and Lua VM source files
 - `include/`: public headers
-- `cmake/`: helper CMake scripts
 - `build/`: generated build files/artifacts
 - `bin/`: copied runtime output and DLLs
 
