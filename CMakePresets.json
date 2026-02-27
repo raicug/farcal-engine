@@ -1,0 +1,69 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "msvc-debug",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "FARCAL_EXTREME_SIZE_OPT": "OFF",
+        "FARCAL_PARALLEL_BUILD": "ON",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "msvc-release",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "FARCAL_EXTREME_SIZE_OPT": "OFF",
+        "FARCAL_PARALLEL_BUILD": "ON",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "msvc-size",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build-size",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "FARCAL_EXTREME_SIZE_OPT": "ON",
+        "FARCAL_PARALLEL_BUILD": "ON",
+        "CMAKE_BUILD_TYPE": "MinSizeRel"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-msvc-debug",
+      "configurePreset": "msvc-debug",
+      "configuration": "Debug",
+      "jobs": 16
+    },
+    {
+      "name": "build-msvc-release",
+      "configurePreset": "msvc-release",
+      "configuration": "Release",
+      "jobs": 16
+    },
+    {
+      "name": "build-msvc-size",
+      "configurePreset": "msvc-size",
+      "configuration": "MinSizeRel",
+      "jobs": 16
+    }
+  ]
+}
