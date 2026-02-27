@@ -3,46 +3,7 @@
 #include "farcal/luavm/AttachedProcessContext.hpp"
 #include "farcal/memory/MemoryReader.hpp"
 
-#include <glm/ext/matrix_double2x2.hpp>
-#include <glm/ext/matrix_double2x3.hpp>
-#include <glm/ext/matrix_double2x4.hpp>
-#include <glm/ext/matrix_double3x2.hpp>
-#include <glm/ext/matrix_double3x3.hpp>
-#include <glm/ext/matrix_double3x4.hpp>
-#include <glm/ext/matrix_double4x2.hpp>
-#include <glm/ext/matrix_double4x3.hpp>
-#include <glm/ext/matrix_double4x4.hpp>
-#include <glm/ext/matrix_float2x2.hpp>
-#include <glm/ext/matrix_float2x3.hpp>
-#include <glm/ext/matrix_float2x4.hpp>
-#include <glm/ext/matrix_float3x2.hpp>
-#include <glm/ext/matrix_float3x3.hpp>
-#include <glm/ext/matrix_float3x4.hpp>
-#include <glm/ext/matrix_float4x2.hpp>
-#include <glm/ext/matrix_float4x3.hpp>
-#include <glm/ext/matrix_float4x4.hpp>
-#include <glm/ext/quaternion_double.hpp>
-#include <glm/ext/quaternion_float.hpp>
-#include <glm/ext/vector_bool1.hpp>
-#include <glm/ext/vector_bool2.hpp>
-#include <glm/ext/vector_bool3.hpp>
-#include <glm/ext/vector_bool4.hpp>
-#include <glm/ext/vector_double1.hpp>
-#include <glm/ext/vector_double2.hpp>
-#include <glm/ext/vector_double3.hpp>
-#include <glm/ext/vector_double4.hpp>
-#include <glm/ext/vector_float1.hpp>
-#include <glm/ext/vector_float2.hpp>
-#include <glm/ext/vector_float3.hpp>
-#include <glm/ext/vector_float4.hpp>
-#include <glm/ext/vector_int1.hpp>
-#include <glm/ext/vector_int2.hpp>
-#include <glm/ext/vector_int3.hpp>
-#include <glm/ext/vector_int4.hpp>
-#include <glm/ext/vector_uint1.hpp>
-#include <glm/ext/vector_uint2.hpp>
-#include <glm/ext/vector_uint3.hpp>
-#include <glm/ext/vector_uint4.hpp>
+#include <glm/glm.hpp>
 
 #include <cctype>
 #include <cstddef>
@@ -102,6 +63,15 @@ void bindReadFunction(sol::table& memoryTable, sol::state_view lua, const char* 
                         -> sol::object { return readAsObjectAttached<T>(lua, address); },
                     [lua](std::uint32_t processId, std::uintptr_t address) -> sol::object {
                       return readAsObject<T>(lua, processId, address);
+                    }));
+}
+
+void bindUnavailableReadFunction(sol::table& memoryTable, sol::state_view lua, const char* name) {
+  memoryTable.set_function(
+      name,
+      sol::overload([lua](std::uintptr_t) -> sol::object { return sol::make_object(lua, sol::lua_nil); },
+                    [lua](std::uint32_t, std::uintptr_t) -> sol::object {
+                      return sol::make_object(lua, sol::lua_nil);
                     }));
 }
 
@@ -277,10 +247,11 @@ sol::object readByTypeName(sol::state_view  lua,
   FARCAL_LUA_READ_IF("dmat3x4", glm::dmat3x4)
   FARCAL_LUA_READ_IF("dmat4x2", glm::dmat4x2)
   FARCAL_LUA_READ_IF("dmat4x3", glm::dmat4x3)
-  FARCAL_LUA_READ_IF("quat", glm::quat)
-  FARCAL_LUA_READ_IF("dquat", glm::dquat)
-
 #undef FARCAL_LUA_READ_IF
+
+  if (normalized == "quat" || normalized == "dquat") {
+    return sol::make_object(lua, sol::lua_nil);
+  }
 
   if (normalized == "string" || normalized == "cstring" || normalized == "str") {
     return readStringAsObject(lua, processId, address, 256);
@@ -390,8 +361,8 @@ void registerGlmFunctions(sol::table& memoryTable, sol::state_view lua) {
   bindReadFunction<glm::dmat4x2>(memoryTable, lua, "read_dmat4x2");
   bindReadFunction<glm::dmat4x3>(memoryTable, lua, "read_dmat4x3");
 
-  bindReadFunction<glm::quat>(memoryTable, lua, "read_quat");
-  bindReadFunction<glm::dquat>(memoryTable, lua, "read_dquat");
+  bindUnavailableReadFunction(memoryTable, lua, "read_quat");
+  bindUnavailableReadFunction(memoryTable, lua, "read_dquat");
 }
 
 std::optional<std::uintptr_t> getMainModuleBaseAddress(std::uint32_t processId) {
